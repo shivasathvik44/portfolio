@@ -1,26 +1,68 @@
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
+
+const bioText =
+  "I'm a student obsessed with building things on the web. I explore design, code, and everything in between.";
+
+const stats = [
+  { label: "Location", value: "Your City" },
+  { label: "Status", value: "Open to work" },
+  { label: "Focus", value: "Web & Design" },
+];
+
+const WordReveal = ({ text }: { text: string }) => {
+  const ref = useRef<HTMLParagraphElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const words = text.split(" ");
+
+  return (
+    <p ref={ref} className="font-mono text-sm md:text-base text-foreground leading-relaxed">
+      {words.map((word, i) => (
+        <span key={i} className="inline-block overflow-hidden mr-[0.3em]">
+          <motion.span
+            className="inline-block"
+            initial={{ y: "100%", opacity: 0 }}
+            animate={inView ? { y: 0, opacity: 1 } : {}}
+            transition={{
+              duration: 0.5,
+              delay: i * 0.04,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+          >
+            {word}
+          </motion.span>
+        </span>
+      ))}
+    </p>
+  );
+};
+
 const AboutSection = () => {
   return (
     <section id="about" className="px-6 md:px-12 lg:px-24 py-32">
-      <div className="grid md:grid-cols-2 gap-16 md:gap-24">
-        <div>
-          <span className="font-mono text-xs text-primary tracking-[0.3em] uppercase">About</span>
-          <h2 className="font-heading text-4xl md:text-5xl font-bold text-foreground mt-4 leading-tight">
-            Design meets<br />engineering
-          </h2>
+      <span className="font-mono text-[11px] text-muted-foreground tracking-[0.2em] uppercase mb-16 block">
+        [ 01 — Info ]
+      </span>
+
+      <div className="grid md:grid-cols-[1fr_1.2fr] gap-8 md:gap-16 items-start">
+        {/* Left — decorative number */}
+        <div className="relative select-none hidden md:block">
+          <span className="font-heading text-[clamp(8rem,20vw,18rem)] font-extrabold leading-none text-foreground/[0.03] tracking-tighter">
+            001
+          </span>
         </div>
+
+        {/* Right — bio + stats */}
         <div className="flex flex-col justify-center">
-          <p className="font-mono text-sm text-muted-foreground leading-relaxed mb-6">
-            I'm a student developer and designer exploring the boundaries of creative technology. 
-            My work spans branding, web development, and interactive experiences.
-          </p>
-          <p className="font-mono text-sm text-muted-foreground leading-relaxed mb-10">
-            I believe in thoughtful design — where every detail serves a purpose and every interaction tells a story.
-          </p>
-          <div className="grid grid-cols-2 gap-6">
-            {["React", "TypeScript", "Figma", "Three.js"].map((skill) => (
-              <div key={skill} className="flex items-center gap-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                <span className="font-mono text-xs text-foreground">{skill}</span>
+          <WordReveal text={bioText} />
+
+          <div className="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-border">
+            {stats.map((stat) => (
+              <div key={stat.label}>
+                <span className="font-mono text-[10px] text-primary/60 tracking-[0.2em] uppercase block mb-2">
+                  {stat.label}
+                </span>
+                <span className="font-mono text-xs text-foreground">{stat.value}</span>
               </div>
             ))}
           </div>
