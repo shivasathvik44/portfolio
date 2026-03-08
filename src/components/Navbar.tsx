@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const links = [
@@ -10,17 +10,46 @@ const links = [
 const Navbar = () => {
   const [time, setTime] = useState(new Date());
   const [menuOpen, setMenuOpen] = useState(false);
+  const [transitioning, setTransitioning] = useState(false);
+  const contentRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
-  // Lock body scroll when menu is open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen]);
+
+  const handleNavClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    setMenuOpen(false);
+
+    const mainContent = document.getElementById("main-content");
+    if (!mainContent) return;
+
+    // Fade out
+    setTransitioning(true);
+    mainContent.style.transition = "opacity 0.4s ease, transform 0.4s ease";
+    mainContent.style.opacity = "0";
+    mainContent.style.transform = "translateY(10px)";
+
+    setTimeout(() => {
+      const target = document.querySelector(href);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth" });
+      }
+
+      // Fade back in
+      setTimeout(() => {
+        mainContent.style.opacity = "1";
+        mainContent.style.transform = "translateY(0)";
+        setTransitioning(false);
+      }, 100);
+    }, 400);
+  }, []);
 
   const formattedTime = time.toLocaleTimeString("en-US", {
     hour: "2-digit",
@@ -42,11 +71,11 @@ const Navbar = () => {
         </span>
 
         <div className="flex items-center gap-6 md:gap-10">
-          {/* Desktop links */}
           {links.map((link) => (
             <a
               key={link.num}
               href={link.href}
+              onClick={(e) => handleNavClick(e, link.href)}
               className="hidden md:flex items-center gap-2 font-mono text-[11px] text-muted-foreground hover:text-primary transition-colors duration-300 tracking-wider uppercase"
             >
               <span className="text-primary/50">{link.num}</span>
@@ -54,13 +83,11 @@ const Navbar = () => {
             </a>
           ))}
 
-          {/* Time — visible on both */}
           <div className="hidden sm:flex items-center gap-3">
             <span className="font-mono text-[11px] text-foreground tabular-nums">{formattedTime}</span>
             <span className="font-mono text-[10px] text-muted-foreground">{formattedDate}</span>
           </div>
 
-          {/* Hamburger — mobile only */}
           <button
             className="md:hidden flex flex-col gap-[5px] w-6 h-5 justify-center items-center relative z-50"
             onClick={() => setMenuOpen((v) => !v)}
@@ -80,7 +107,6 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Mobile fullscreen menu */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -94,7 +120,7 @@ const Navbar = () => {
               <motion.a
                 key={link.num}
                 href={link.href}
-                onClick={() => setMenuOpen(false)}
+                onClick={(e) => handleNavClick(e, link.href)}
                 className="flex items-center gap-4 font-heading text-3xl font-bold text-foreground hover:text-primary transition-colors duration-300"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}

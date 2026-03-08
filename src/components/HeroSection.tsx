@@ -1,9 +1,22 @@
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+
 const words = ["STUDENT", "& MAKER"];
 
 const HeroSection = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  // Parallax — heading moves at 0.4x scroll speed
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+
   return (
-    <section className="min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 overflow-hidden">
-      <div className="max-w-full">
+    <section ref={sectionRef} className="min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 overflow-hidden relative">
+      <motion.div className="max-w-full" style={{ y, opacity }}>
         <div className="-mx-1 md:-mx-6">
           {words.map((word, i) => (
             <div key={i} className="overflow-hidden">
@@ -23,9 +36,8 @@ const HeroSection = () => {
         >
           — based somewhere, building things.
         </p>
-      </div>
+      </motion.div>
 
-      {/* Scroll indicator */}
       <div
         className="absolute bottom-8 md:bottom-12 left-6 md:left-12 flex items-center gap-3 animate-hero-word opacity-0"
         style={{ animationDelay: "600ms" }}
