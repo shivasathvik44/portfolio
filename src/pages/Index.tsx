@@ -3,6 +3,8 @@ import LoadingScreen from "@/components/LoadingScreen";
 import HeroSection from "@/components/HeroSection";
 import ProjectsSection from "@/components/ProjectsSection";
 import AboutSection from "@/components/AboutSection";
+import SkillsMarquee from "@/components/SkillsMarquee";
+import ContactSection from "@/components/ContactSection";
 import FooterSection from "@/components/FooterSection";
 import Navbar from "@/components/Navbar";
 
@@ -16,11 +18,15 @@ const Index = () => {
   return (
     <>
       <LoadingScreen onComplete={handleLoadComplete} />
+      {/* Noise overlay */}
+      <div className="noise-overlay" />
       <div className={`min-h-screen bg-background transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"}`}>
         <Navbar />
         <HeroSection />
-        <ProjectsSection />
         <AboutSection />
+        <SkillsMarquee />
+        <ProjectsSection />
+        <ContactSection />
         <FooterSection />
       </div>
     </>
