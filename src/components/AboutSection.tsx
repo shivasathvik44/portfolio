@@ -45,16 +45,17 @@ const AboutSection = () => {
 
   return (
     <section id="about" className="px-6 md:px-12 lg:px-24 py-32" ref={sectionRef}>
-      <span className="font-mono text-[11px] text-muted-foreground tracking-[0.2em] uppercase mb-16 block">
-        <TextScramble text="[ 01 — Info ]" delay={200} duration={800} trigger={inView} />
-      </span>
+      {/* Two-column grid with vertical divider */}
+      <div className="grid grid-cols-1 md:grid-cols-[3fr_1px_2fr] gap-0 items-center">
+        {/* Left column — 60% */}
+        <div className="flex flex-col justify-center order-2 md:order-1 md:pr-12 lg:pr-16">
+          <span className="font-mono text-[11px] text-muted-foreground tracking-[0.2em] uppercase mb-8 block">
+            <TextScramble text="[ 01 — Info ]" delay={200} duration={800} trigger={inView} />
+          </span>
 
-      <div className="grid md:grid-cols-[1fr_auto] gap-12 md:gap-16 items-start">
-        {/* Bio text - left side */}
-        <div className="flex flex-col justify-center order-2 md:order-1">
           <WordReveal text={bioText} />
 
-          <div className="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-border">
+          <div className="grid grid-cols-3 gap-6 mt-10 pt-8 border-t border-border">
             {stats.map((stat) => (
               <div key={stat.label}>
                 <span className="font-mono text-[10px] text-primary/60 tracking-[0.2em] uppercase block mb-2">
@@ -66,14 +67,17 @@ const AboutSection = () => {
           </div>
         </div>
 
-        {/* Profile photo - right side */}
-        <div className="flex flex-col items-center order-1 md:order-2">
+        {/* Vertical amber divider — hidden on mobile */}
+        <div className="hidden md:block w-px self-stretch bg-primary/30" />
+
+        {/* Right column — 40% */}
+        <div className="flex flex-col items-center justify-center order-1 md:order-3 md:pl-12 lg:pl-16 mb-10 md:mb-0">
           <motion.div
             className="relative group"
             animate={{ y: [0, -8, 0] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           >
-            {/* Amber glow bloom behind figure */}
+            {/* Amber glow bloom */}
             <div
               className="absolute inset-0 -inset-x-16 -inset-y-8 rounded-full opacity-30 blur-[80px] pointer-events-none"
               style={{
@@ -84,14 +88,13 @@ const AboutSection = () => {
             <img
               src={profilePhoto}
               alt="Profile photo"
-              className="relative z-10 h-[320px] md:h-[420px] w-auto object-cover object-top
+              className="relative z-10 h-[380px] md:h-[480px] w-auto object-cover object-top
                 filter blur-[5px] grayscale-[20%]
                 group-hover:blur-0 group-hover:grayscale-0
                 transition-all duration-1000 ease-out"
             />
           </motion.div>
 
-          {/* Hover label */}
           <span className="font-mono text-[10px] text-muted-foreground tracking-[0.2em] mt-4 animate-pulse">
             [ HOVER ]
           </span>
