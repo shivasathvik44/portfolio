@@ -1,5 +1,5 @@
-import { useState, useRef, useCallback } from "react";
-import { motion, useInView } from "framer-motion";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import project01 from "@/assets/project-01.jpg";
 import project02 from "@/assets/project-02.jpg";
 import project03 from "@/assets/project-03.jpg";
@@ -10,101 +10,98 @@ const projects = [
   { number: "03", title: "Mobile Experience", category: "UI/UX / Dev", year: "2024", image: project03 },
 ];
 
-const ProjectRow = ({
+const ProjectCard = ({
   project,
-  index,
 }: {
   project: (typeof projects)[0];
-  index: number;
 }) => {
   const [hovered, setHovered] = useState(false);
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
-  const rowRef = useRef<HTMLDivElement>(null);
-  const inView = useInView(rowRef, { once: true, margin: "-60px" });
-
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!rowRef.current) return;
-    const rect = rowRef.current.getBoundingClientRect();
-    setMouse({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-  }, []);
 
   return (
-    <motion.div
-      ref={rowRef}
-      initial={{ opacity: 0, y: 30 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-      className="relative border-t border-border group cursor-pointer"
+    <div
+      data-cursor-view
+      className="relative group cursor-pointer shrink-0 w-[85vw] md:w-[45vw] h-[70vh] overflow-hidden"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onMouseMove={handleMouseMove}
     >
-      {/* Hover background */}
-      <div
-        className="absolute inset-0 bg-foreground/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+      {/* Image */}
+      <motion.img
+        src={project.image}
+        alt={project.title}
+        className="absolute inset-0 w-full h-full object-cover"
+        animate={{ scale: hovered ? 1.05 : 1 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       />
 
-      {/* Floating image */}
-      {hovered && (
-        <div
-          className="fixed z-50 pointer-events-none w-[280px] h-[350px] overflow-hidden rounded-sm"
-          style={{
-            left: mouse.x + (rowRef.current?.getBoundingClientRect().left ?? 0) + 20,
-            top: mouse.y + (rowRef.current?.getBoundingClientRect().top ?? 0) - 175,
-          }}
-        >
-          <motion.img
-            src={project.image}
-            alt={project.title}
-            className="w-full h-full object-cover"
-            initial={{ opacity: 0, scale: 1.1 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.1 }}
-            transition={{ duration: 0.3 }}
-          />
-        </div>
-      )}
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-background/60 group-hover:bg-background/40 transition-all duration-600" />
 
-      <div className="relative flex items-center justify-between py-8 md:py-12 px-2">
-        {/* Number */}
-        <span className="font-heading text-4xl md:text-6xl font-extrabold text-foreground/[0.06] group-hover:text-primary/10 transition-colors duration-300 w-20 md:w-28 shrink-0">
-          {project.number}
+      {/* Content */}
+      <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12">
+        <span className="font-mono text-[10px] text-primary/50 tracking-[0.2em] uppercase mb-2">
+          {project.number} — {project.category}
         </span>
-
-        {/* Title */}
-        <h3 className="font-heading text-2xl md:text-4xl lg:text-5xl font-bold text-foreground group-hover:text-primary transition-colors duration-300 flex-1 ml-4 md:ml-8">
+        <h3 className="font-heading text-3xl md:text-5xl font-bold text-foreground group-hover:text-primary transition-colors duration-600">
           {project.title}
         </h3>
-
-        {/* Meta */}
-        <div className="hidden md:flex items-center gap-8 shrink-0">
-          <span className="font-mono text-[11px] text-muted-foreground tracking-wider uppercase">
-            {project.category}
-          </span>
-          <span className="font-mono text-[11px] text-muted-foreground">
-            {project.year}
-          </span>
-          <span className="text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-lg">
-            →
-          </span>
-        </div>
+        <span className="font-mono text-[11px] text-muted-foreground mt-2">{project.year}</span>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
 const ProjectsSection = () => {
-  return (
-    <section id="work" className="px-6 md:px-12 lg:px-24 py-32">
-      <span className="font-mono text-[11px] text-muted-foreground tracking-[0.2em] uppercase mb-16 block">
-        [ 02 — Work ]
-      </span>
+  const sectionRef = useRef<HTMLElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
-      <div>
-        {projects.map((project, i) => (
-          <ProjectRow key={project.number} project={project} index={i} />
-        ))}
-        <div className="border-t border-border" />
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  // Horizontal scroll: translate vertical scroll into horizontal movement
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end end"],
+  });
+
+  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-66%"]);
+
+  if (isMobile) {
+    return (
+      <section id="work" className="px-6 py-32">
+        <span className="font-mono text-[11px] text-muted-foreground tracking-[0.2em] uppercase mb-16 block">
+          [ 02 — Work ]
+        </span>
+        <div className="flex flex-col gap-8">
+          {projects.map((project) => (
+            <ProjectCard key={project.number} project={project} />
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section id="work" ref={sectionRef} className="relative" style={{ height: `${projects.length * 100}vh` }}>
+      <div className="sticky top-0 h-screen overflow-hidden">
+        <div className="flex items-start pt-24 px-12 mb-8">
+          <span className="font-mono text-[11px] text-muted-foreground tracking-[0.2em] uppercase">
+            [ 02 — Work ]
+          </span>
+        </div>
+        <motion.div
+          ref={scrollContainerRef}
+          className="flex gap-8 px-12 h-[calc(100vh-120px)] items-center"
+          style={{ x }}
+        >
+          {projects.map((project) => (
+            <ProjectCard key={project.number} project={project} />
+          ))}
+        </motion.div>
       </div>
     </section>
   );

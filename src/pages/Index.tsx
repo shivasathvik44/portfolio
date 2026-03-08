@@ -7,6 +7,7 @@ import SkillsMarquee from "@/components/SkillsMarquee";
 import ContactSection from "@/components/ContactSection";
 import FooterSection from "@/components/FooterSection";
 import Navbar from "@/components/Navbar";
+import CustomCursor from "@/components/CustomCursor";
 
 const Index = () => {
   const [loaded, setLoaded] = useState(false);
@@ -18,9 +19,9 @@ const Index = () => {
   return (
     <>
       <LoadingScreen onComplete={handleLoadComplete} />
-      {/* Noise overlay */}
+      <CustomCursor />
       <div className="noise-overlay" />
-      <div className={`min-h-screen bg-background transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"}`}>
+      <div className={`min-h-screen bg-background transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"} cursor-none md:cursor-none`}>
         <Navbar />
         <HeroSection />
         <AboutSection />
