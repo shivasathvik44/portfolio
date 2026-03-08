@@ -21,7 +21,10 @@ const Index = () => {
       <LoadingScreen onComplete={handleLoadComplete} />
       <CustomCursor />
       <div className="noise-overlay" />
-      <div className={`min-h-screen bg-background transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"} cursor-none md:cursor-none`}>
+      <div
+        id="main-content"
+        className={`min-h-screen bg-background transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"} cursor-none md:cursor-none`}
+      >
         <Navbar />
         <HeroSection />
         <AboutSection />
