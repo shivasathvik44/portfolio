@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import TextScramble from "@/components/TextScramble";
 
@@ -44,28 +44,51 @@ const AboutSection = () => {
 
   return (
     <section id="about" className="px-6 md:px-12 lg:px-24 py-32" ref={sectionRef}>
-      <span className="font-mono text-[11px] text-muted-foreground tracking-[0.2em] uppercase mb-16 block">
+      <motion.span
+        className="font-mono text-[11px] text-muted-foreground tracking-[0.2em] uppercase mb-16 block"
+        initial={{ opacity: 0, y: 20 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      >
         <TextScramble text="[ 01 — Info ]" delay={200} duration={800} trigger={inView} />
-      </span>
+      </motion.span>
 
       <div className="grid md:grid-cols-[1fr_1.2fr] gap-8 md:gap-16 items-start">
-        <div className="relative select-none hidden md:block">
+        <motion.div
+          className="relative select-none hidden md:block"
+          initial={{ opacity: 0, y: 30 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+        >
           <span className="font-heading text-[clamp(8rem,20vw,18rem)] font-extrabold leading-none text-foreground/[0.03] tracking-tighter">
             001
           </span>
-        </div>
+        </motion.div>
 
         <div className="flex flex-col justify-center">
-          <WordReveal text={bioText} />
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <WordReveal text={bioText} />
+          </motion.div>
 
           <div className="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-border">
-            {stats.map((stat) => (
-              <div key={stat.label}>
+            {stats.map((stat, i) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 20 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.45 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
+              >
                 <span className="font-mono text-[10px] text-primary/60 tracking-[0.2em] uppercase block mb-2">
-                  {stat.label}
+                  <TextScramble text={stat.label} delay={600 + i * 150} duration={600} trigger={inView} />
                 </span>
-                <span className="font-mono text-xs text-foreground">{stat.value}</span>
-              </div>
+                <span className="font-mono text-xs text-foreground">
+                  <TextScramble text={stat.value} delay={750 + i * 150} duration={600} trigger={inView} />
+                </span>
+              </motion.div>
             ))}
           </div>
         </div>
