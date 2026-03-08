@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import MagneticWrap from "@/components/MagneticWrap";
 
 const links = [
   { num: "01", label: "Info", href: "#about" },
@@ -10,8 +11,6 @@ const links = [
 const Navbar = () => {
   const [time, setTime] = useState(new Date());
   const [menuOpen, setMenuOpen] = useState(false);
-  const [transitioning, setTransitioning] = useState(false);
-  const contentRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
@@ -30,38 +29,23 @@ const Navbar = () => {
     const mainContent = document.getElementById("main-content");
     if (!mainContent) return;
 
-    // Fade out
-    setTransitioning(true);
     mainContent.style.transition = "opacity 0.4s ease, transform 0.4s ease";
     mainContent.style.opacity = "0";
     mainContent.style.transform = "translateY(10px)";
 
     setTimeout(() => {
       const target = document.querySelector(href);
-      if (target) {
-        target.scrollIntoView({ behavior: "smooth" });
-      }
+      if (target) target.scrollIntoView({ behavior: "smooth" });
 
-      // Fade back in
       setTimeout(() => {
         mainContent.style.opacity = "1";
         mainContent.style.transform = "translateY(0)";
-        setTransitioning(false);
       }, 100);
     }, 400);
   }, []);
 
-  const formattedTime = time.toLocaleTimeString("en-US", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
-
-  const formattedDate = time.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+  const formattedTime = time.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false });
+  const formattedDate = time.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 
   return (
     <>
@@ -72,15 +56,16 @@ const Navbar = () => {
 
         <div className="flex items-center gap-6 md:gap-10">
           {links.map((link) => (
-            <a
-              key={link.num}
-              href={link.href}
-              onClick={(e) => handleNavClick(e, link.href)}
-              className="hidden md:flex items-center gap-2 font-mono text-[11px] text-muted-foreground hover:text-primary transition-colors duration-300 tracking-wider uppercase"
-            >
-              <span className="text-primary/50">{link.num}</span>
-              <span>{link.label}</span>
-            </a>
+            <MagneticWrap key={link.num} className="hidden md:block" strength={0.35}>
+              <a
+                href={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
+                className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground hover:text-primary transition-colors duration-300 tracking-wider uppercase"
+              >
+                <span className="text-primary/50">{link.num}</span>
+                <span>{link.label}</span>
+              </a>
+            </MagneticWrap>
           ))}
 
           <div className="hidden sm:flex items-center gap-3">
