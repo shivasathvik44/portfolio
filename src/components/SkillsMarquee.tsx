@@ -1,3 +1,6 @@
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
+
 const skills = [
   "HTML", "CSS", "JavaScript", "React", "Figma", "Python", "Git", "Node.js", "UI Design",
 ];
@@ -16,14 +19,23 @@ const MarqueeContent = () => (
 );
 
 const SkillsMarquee = () => {
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+
   return (
-    <section className="py-12 border-t border-b border-border overflow-hidden group">
+    <motion.section
+      ref={ref}
+      className="py-12 border-t border-b border-border overflow-hidden group"
+      initial={{ opacity: 0, y: 20 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+    >
       <div className="flex gap-6 animate-marquee group-hover:[animation-play-state:paused]">
         <MarqueeContent />
         <MarqueeContent />
         <MarqueeContent />
       </div>
-    </section>
+    </motion.section>
   );
 };
 
