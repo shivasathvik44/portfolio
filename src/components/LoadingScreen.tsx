@@ -33,7 +33,7 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
 
   if (hidden) return null;
 
-  const formatted = count.toString().padStart(2, "0");
+  const formatted = count.toString().padStart(3, "0");
 
   return (
     <div className="fixed inset-0 z-50 pointer-events-none">
@@ -43,7 +43,7 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
       >
         {!splitting && (
           <span className="font-mono text-[clamp(4rem,15vw,12rem)] font-light text-foreground tracking-tighter pr-0 select-none">
-            {formatted[0]}
+            {formatted[0]}{formatted[1]}
           </span>
         )}
       </div>
@@ -54,7 +54,7 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
       >
         {!splitting && (
           <span className="font-mono text-[clamp(4rem,15vw,12rem)] font-light text-foreground tracking-tighter pl-0 select-none">
-            {formatted[1]}
+            {formatted[2]}
           </span>
         )}
       </div>
