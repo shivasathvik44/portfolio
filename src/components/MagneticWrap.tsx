@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback, type ReactNode } from "react";
+import { useRef, useCallback, type ReactNode } from "react";
 import { motion, useSpring } from "framer-motion";
 
 interface MagneticWrapProps {
@@ -30,15 +30,16 @@ const MagneticWrap = ({ children, className = "", strength = 0.3 }: MagneticWrap
   }, [x, y]);
 
   return (
-    <motion.div
+    <div
       ref={ref}
       className={className}
-      style={{ x, y }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      {children}
-    </motion.div>
+      <motion.div style={{ x, y }}>
+        {children}
+      </motion.div>
+    </div>
   );
 };
 

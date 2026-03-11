@@ -1,7 +1,6 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import TextScramble from "@/components/TextScramble";
-import MagneticWrap from "@/components/MagneticWrap";
 
 const ContactSection = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -79,14 +78,13 @@ const ContactSection = () => {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.84, ease: [0.16, 1, 0.3, 1] }}
           >
-            <MagneticWrap className="self-start" strength={0.4}>
-              <button
-                type="submit"
-                className="font-mono text-xs text-foreground tracking-[0.2em] uppercase relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-px after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-500 hover:after:scale-x-100 hover:after:origin-bottom-left hover:text-primary transition-colors duration-600"
-              >
-                <TextScramble text="Send Message →" delay={1000} duration={700} trigger={inView} />
-              </button>
-            </MagneticWrap>
+            <button
+              type="submit"
+              data-cursor-label="Send"
+              className="font-mono text-xs text-foreground tracking-[0.2em] uppercase relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-px after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-500 hover:after:scale-x-100 hover:after:origin-bottom-left hover:text-primary transition-colors duration-600"
+            >
+              <TextScramble text="Send Message →" delay={1000} duration={700} trigger={inView} />
+            </button>
           </motion.div>
         </motion.form>
       </div>
