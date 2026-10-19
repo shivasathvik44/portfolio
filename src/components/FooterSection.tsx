@@ -15,7 +15,7 @@ const FooterSection = () => {
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
     >
       <p className="font-mono text-[10px] text-muted-foreground tracking-[0.2em] uppercase text-center">
-        <TextScramble text="© 2025 Your Name — All Rights Reserved" delay={200} duration={800} trigger={inView} />
+        <TextScramble text={`© ${new Date().getFullYear()} Shiva Sathvik — All Rights Reserved`} delay={200} duration={800} trigger={inView} />
       </p>
     </motion.footer>
   );

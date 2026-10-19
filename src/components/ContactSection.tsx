@@ -1,3 +1,4 @@
+import SectionNumber from "@/components/SectionNumber";
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import TextScramble from "@/components/TextScramble";
@@ -7,14 +8,15 @@ const ContactSection = () => {
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section id="contact" className="px-6 md:px-12 lg:px-24 py-32" ref={ref}>
+    <section id="contact" className="relative isolate px-6 md:px-12 lg:px-24 py-32" ref={ref}>
+      <SectionNumber number="004" className="absolute -z-10 bottom-20 left-12 lg:left-24" />
       <motion.span
         className="font-mono text-[11px] text-muted-foreground tracking-[0.2em] uppercase mb-16 block"
         initial={{ opacity: 0, y: 20 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       >
-        <TextScramble text="[ 03 — Contact ]" delay={200} duration={800} trigger={inView} />
+        <TextScramble text="[ 04 — Contact ]" delay={200} duration={800} trigger={inView} />
       </motion.span>
 
       <div className="grid md:grid-cols-2 gap-16 md:gap-24">

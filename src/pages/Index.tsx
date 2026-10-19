@@ -1,8 +1,11 @@
+import MonogramFormation from "@/components/MonogramFormation";
+import { useSectionScroll } from "@/hooks/use-section-scroll";
 import { useState, useCallback } from "react";
 import LoadingScreen from "@/components/LoadingScreen";
 import HeroSection from "@/components/HeroSection";
 import ProjectsSection from "@/components/ProjectsSection";
 import AboutSection from "@/components/AboutSection";
+import TechnicalToolkit from "@/components/TechnicalToolkit";
 import SkillsMarquee from "@/components/SkillsMarquee";
 import ContactSection from "@/components/ContactSection";
 import FooterSection from "@/components/FooterSection";
@@ -11,6 +14,7 @@ import CustomCursor from "@/components/CustomCursor";
 
 const Index = () => {
   const [loaded, setLoaded] = useState(false);
+  useSectionScroll(loaded);
 
   const handleLoadComplete = useCallback(() => {
     setLoaded(true);
@@ -20,6 +24,7 @@ const Index = () => {
     <>
       <LoadingScreen onComplete={handleLoadComplete} />
       <CustomCursor />
+      {loaded && <MonogramFormation />}
       <div className="noise-overlay" />
       <div
         id="main-content"
@@ -29,6 +34,7 @@ const Index = () => {
         <HeroSection />
         <AboutSection />
         <SkillsMarquee />
+        <TechnicalToolkit />
         <ProjectsSection />
         <ContactSection />
         <FooterSection />

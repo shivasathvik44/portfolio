@@ -4,8 +4,9 @@ import MagneticWrap from "@/components/MagneticWrap";
 
 const links = [
   { num: "01", label: "Info", href: "#about" },
-  { num: "02", label: "Work", href: "#work" },
-  { num: "03", label: "Contact", href: "#contact" },
+  { num: "02", label: "Toolkit", href: "#toolkit" },
+  { num: "03", label: "Work", href: "#work" },
+  { num: "04", label: "Contact", href: "#contact" },
 ];
 
 const Navbar = () => {
@@ -51,7 +52,7 @@ const Navbar = () => {
     <>
       <nav className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-6 md:px-12 py-5 bg-background/80 backdrop-blur-md">
         <span className="font-mono text-[11px] text-foreground tracking-[0.35em] uppercase">
-          Your Name
+          Shiva Sathvik
         </span>
 
         <div className="flex items-center gap-6 md:gap-10">
@@ -68,7 +69,7 @@ const Navbar = () => {
             </MagneticWrap>
           ))}
 
-          <div className="hidden sm:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-3">
             <span className="font-mono text-[11px] text-foreground tabular-nums">{formattedTime}</span>
             <span className="font-mono text-[10px] text-muted-foreground">{formattedDate}</span>
           </div>
